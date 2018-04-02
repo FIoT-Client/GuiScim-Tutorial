@@ -1,0 +1,270 @@
+import json
+import logging
+
+import requests
+
+
+def get_token(keystone_url):
+    logging.debug('getting token...')
+
+    json_payload = {
+        "auth": {
+            "identity": {
+                "methods": ["password"],
+                "password": {
+                    "user": {
+                        "name": "idm",
+                        "domain": {"id": "default"},
+                        "password": "idm"
+                    }
+                }
+            }
+        }
+    }
+
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url=keystone_url + '/v3/auth/tokens',
+                             data=json.dumps(json_payload),
+                             headers=headers)
+
+    if response.status_code in (201, 200):
+        token = response.headers['X-Subject-Token']
+        logging.info('TOKEN --- ' + token)
+        return token
+    else:
+        logging.error('GET TOKEN ### ' + response.text)
+
+
+def list_roles(keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.get(url=keystone_url + '/v3/OS-ROLES/roles',
+                            headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST ROLES ### ' + response.text)
+
+
+def list_permissions(keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.get(url=keystone_url + '/v3/OS-ROLES/permissions',
+                            headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST PERMISSIONS ### ' + response.text)
+
+
+def get_role(role_id, keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.get(url=keystone_url + '/v3/OS-ROLES/roles/' + role_id,
+                            headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST ROLE PERMISSIONS ### ' + response.text)
+
+
+def role_permissions(role_id, keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.get(url=keystone_url + '/v3/OS-ROLES/roles/' + role_id + '/permissions',
+                            headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST ROLE PERMISSIONS ### ' + response.text)
+
+
+def put_permissions_in_role(role_id, permissions_id, keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.put(url=keystone_url + '/v3/OS-ROLES/roles/' + role_id + '/permissions/' + permissions_id + '',
+                            headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST ROLE ORGANIZATION ### ' + response.text)
+
+
+def delete_permissions(id_p, keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.delete(url=keystone_url + '/v3/OS-ROLES/permissions/' + id_p,
+                               headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST ROLE ORGANIZATION ### ' + response.text)
+
+
+def delete_users(id_user, keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.delete(url=keystone_url + '/v3/OS-SCIM/v2/Users/' + id_user,
+                               headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('DELETE USER ### ' + response.text)
+
+
+def delete_role(id_role, keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.delete(url=keystone_url + '/v3/OS-ROLES/roles/' + id_role,
+                               headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('DELE ROLE ### ' + response.text)
+
+
+def list_users_roles(keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.get(url=keystone_url + '/v3/OS-ROLES/users/role_assignments',
+                            headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST ROLES ### ' + response.text)
+
+
+def list_users(keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.get(url=keystone_url + '/v3/OS-SCIM/v2/Users/',
+                            headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('LIST USERS ### ' + response.text)
+
+
+def create_user(keystone_url, token):
+    json_payload = {
+        "userName": "gabicavalcantesilva",
+        "displayName": "Gabriela Cavalcante",
+        "password": "75759597",
+        "emails": [
+            {
+                "value": "gabicavalcantesilva@gmail.com"
+            }
+        ]
+    }
+
+    headers = {'X-Auth-token': token, 'Content-Type': 'application/json'}
+    response = requests.post(url=keystone_url + '/v3/OS-SCIM/v2/Users/',
+                             data=json.dumps(json_payload),
+                             headers=headers)
+
+    if response.status_code in (201, 200):
+        logging.info(response.text)
+    else:
+        logging.error(response.text)
+
+
+def create_role(keystone_url, token):
+    json_payload = {
+        "role": {
+            "name": "developer",
+            "application_id": "9d334951789a433d8bcff3d5334eee84"
+        }
+    }
+
+    headers = {'X-Auth-token': token, 'Content-Type': 'application/json'}
+    response = requests.post(url=keystone_url + '/v3/OS-ROLES/roles',
+                             data=json.dumps(json_payload),
+                             headers=headers)
+
+    if response.status_code in (201, 200):
+        logging.info(response.text)
+    else:
+        logging.error(response.text)
+
+
+def create_polices(keystone_url, token):
+    json_payload = {
+        "permission": {
+            "name": "list users",
+            "application_id": "9d334951789a433d8bcff3d5334eee84",
+            "resource": "service2/list",
+            "action": "GET",
+        }
+    }
+
+    headers = {'X-Auth-token': token, 'Content-Type': 'application/json'}
+    response = requests.post(url=keystone_url + '/v3/OS-ROLES/permissions',
+                             data=json.dumps(json_payload),
+                             headers=headers)
+
+    if response.status_code in (201, 200):
+        logging.info(response.text)
+    else:
+        logging.error(response.text)
+
+
+def put_role_in_user(user_id, application_id, role_id, keystone_url, token):
+    headers = {'X-Auth-token': token}
+
+    response = requests.put(
+        url=keystone_url + '/v3/OS-ROLES/users/' + user_id + '/applications/' + application_id + '/roles/' + role_id,
+        headers=headers)
+
+    if response.status_code in (201, 200):
+        parsed = json.loads(response.text)
+        logging.info(json.dumps(parsed, indent=4, sort_keys=True))
+        return parsed
+    else:
+        logging.error('PUT ROLE IN USER ### ' + response.text)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(filename='script-keyrock.log', filemode='w', level=logging.DEBUG)
+    logging.debug('starting...')
+
+    keystone_url = "http://10.7.49.177:5000/"
+    token = None
+    roles_id = []
+
+    token = get_token(keystone_url)
+    list_users(keystone_url, token)
+   # list_permissions(keystone_url, token)
+   # list_roles(keystone_url, token)
+   # create_user(keystone_url, token)
+   # put_role_in_user('idm_user', '6521c09b0ae14fa2b9e4dc63fa3358da', 'a911b57ae2b144c58e22c1aebfd156d6', keystone_url, token)
+    # list_users(keystone_url, token)
