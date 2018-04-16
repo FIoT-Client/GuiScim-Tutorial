@@ -114,7 +114,7 @@ Ao entrar na conta de administrador cadastre uma nova aplicação seguindo as in
 - Aperte em "next" e escolha uma imagem para a aplicação, essa imagem é opcional
 .. image:: documentacao/source/imagens/exibir-aplicacao.png
 - Por fim, identifique a política de acesso para a sua aplicação, você poderá criar novas permissões e papéis através dessa interface.
-.. image:: documentacao/source/imagens/developer-portal.png    
+.. image:: documentacao/source/imagens/developer_portal.png    
 - Após o término da configuração teremos essa página:
 .. image:: documentacao/source/imagens/infos-cadastradas.png
 
