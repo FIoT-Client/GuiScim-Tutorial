@@ -164,6 +164,16 @@ Com as duas partes em funcionamento, acesse o link da sua aplicação que estar�
 
     http://IP-APP:5055/guiscim
 
-Autentique-se e poderá ter acesso normalmente a aplicação criada.
+Então, você chegará na seguinte tela:
+
+.. image:: documentacao/source/imagens/tela_autentica.png 
+
+Após autenticar-se com o usuário e senha mencionado acima teremos a seguinte tela:
+
+
+.. image:: documentacao/source/imagens/lista-usuarios.png 
+
+A tela acima irá exibir todos os usuários e terá ao lado os botões com ações que podem ser efetuadas por esses usuários, assim você poderá
+habilitar, deletar ou atualizar o usuário. Ao lado esquerdo teremos um botão que leva a página de criação de usuários, onde você digitará, o novo usuário e senha para efetuar sua criação. 
 
 
